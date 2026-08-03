@@ -21,7 +21,7 @@
     }
   ],
   "cursorSync": "Crosshair",
-  "description": "vLLM + Node Exporter dashboard for DGX Spark/Qwen. Added ultra-thin cloud-vs-local cost strip at top. NVIDIA-inspired visual theme: #76B900 green, dark gray, white, minimal high-contrast styling. NVIDIA refined theme uses #76B900 green, #1E1E1E dark gray, and white as the base palette, with amber/red reserved for operational warning states.",
+  "description": "vLLM + Node Exporter dashboard for DGX Spark/Qwen. Added an interactive output-tokens-per-second time-series near the top while retaining the top-row output TPS stat; moved speculative-decoding acceptance by position to the fifth row and request rate/success/errors to the following row. Includes the ultra-thin cloud-vs-local cost strip and NVIDIA-inspired visual theme: #76B900 green, dark gray, white, with amber/red reserved for operational warning states.",
   "editable": true,
   "elements": {
     "panel-1": {
@@ -5611,6 +5611,145 @@
           "version": "13.1.0"
         }
       }
+    },
+    "panel-44": {
+      "kind": "Panel",
+      "spec": {
+        "data": {
+          "kind": "QueryGroup",
+          "spec": {
+            "queries": [
+              {
+                "kind": "PanelQuery",
+                "spec": {
+                  "hidden": false,
+                  "query": {
+                    "datasource": {
+                      "name": "dfr1d9ottv8xsc"
+                    },
+                    "group": "prometheus",
+                    "kind": "DataQuery",
+                    "spec": {
+                      "editorMode": "code",
+                      "expr": "sum(rate(vllm:generation_tokens_total[$__rate_interval]))",
+                      "legendFormat": "output tokens/sec",
+                      "range": true
+                    },
+                    "version": "v0"
+                  },
+                  "refId": "A"
+                }
+              }
+            ],
+            "queryOptions": {},
+            "transformations": []
+          }
+        },
+        "description": "Interactive output/decode token throughput over time. Hover to inspect exact output tokens per second while preserving the top-row OUTPUT TOKENS / SEC headline.",
+        "id": 44,
+        "links": [],
+        "title": "OUTPUT TOKENS / SEC OVER TIME",
+        "vizConfig": {
+          "group": "timeseries",
+          "kind": "VizConfig",
+          "spec": {
+            "fieldConfig": {
+              "defaults": {
+                "color": {
+                  "fixedColor": "#76B900",
+                  "mode": "fixed"
+                },
+                "custom": {
+                  "axisBorderShow": false,
+                  "axisCenteredZero": false,
+                  "axisColorMode": "text",
+                  "axisLabel": "",
+                  "axisPlacement": "auto",
+                  "barAlignment": 0,
+                  "barWidthFactor": 0.6,
+                  "drawStyle": "line",
+                  "fillOpacity": 10,
+                  "gradientMode": "opacity",
+                  "hideFrom": {
+                    "legend": false,
+                    "tooltip": false,
+                    "viz": false
+                  },
+                  "insertNulls": false,
+                  "lineInterpolation": "smooth",
+                  "lineWidth": 2,
+                  "pointSize": 4,
+                  "scaleDistribution": {
+                    "type": "linear"
+                  },
+                  "showPoints": "never",
+                  "showValues": false,
+                  "spanNulls": true,
+                  "stacking": {
+                    "group": "A",
+                    "mode": "none"
+                  },
+                  "thresholdsStyle": {
+                    "mode": "off"
+                  }
+                },
+                "noValue": "—",
+                "thresholds": {
+                  "mode": "absolute",
+                  "steps": [
+                    {
+                      "color": "#76B900",
+                      "value": 0
+                    }
+                  ]
+                },
+                "unit": "tps"
+              },
+              "overrides": [
+                {
+                  "matcher": {
+                    "id": "byName",
+                    "options": "output tokens/sec"
+                  },
+                  "properties": [
+                    {
+                      "id": "color",
+                      "value": {
+                        "fixedColor": "#76B900",
+                        "mode": "fixed"
+                      }
+                    }
+                  ]
+                }
+              ]
+            },
+            "options": {
+              "annotations": {
+                "clustering": -1,
+                "multiLane": false
+              },
+              "legend": {
+                "calcs": [
+                  "lastNotNull",
+                  "mean",
+                  "max"
+                ],
+                "displayMode": "table",
+                "enableFacetedFilter": false,
+                "overflow": "ellipsis",
+                "placement": "bottom",
+                "showLegend": true
+              },
+              "tooltip": {
+                "hideZeros": false,
+                "mode": "single",
+                "sort": "none"
+              }
+            }
+          },
+          "version": "13.1.0"
+        }
+      }
     }
   },
   "layout": {
@@ -5843,7 +5982,7 @@
           "spec": {
             "element": {
               "kind": "ElementReference",
-              "name": "panel-13"
+              "name": "panel-44"
             },
             "height": 6,
             "width": 8,
@@ -5882,7 +6021,7 @@
           "spec": {
             "element": {
               "kind": "ElementReference",
-              "name": "panel-9"
+              "name": "panel-13"
             },
             "height": 7,
             "width": 8,
@@ -5895,11 +6034,24 @@
           "spec": {
             "element": {
               "kind": "ElementReference",
+              "name": "panel-9"
+            },
+            "height": 7,
+            "width": 8,
+            "x": 0,
+            "y": 26
+          }
+        },
+        {
+          "kind": "GridLayoutItem",
+          "spec": {
+            "element": {
+              "kind": "ElementReference",
               "name": "panel-16"
             },
             "height": 7,
-            "width": 6,
-            "x": 0,
+            "width": 8,
+            "x": 8,
             "y": 26
           }
         },
@@ -5911,8 +6063,8 @@
               "name": "panel-17"
             },
             "height": 7,
-            "width": 6,
-            "x": 6,
+            "width": 8,
+            "x": 16,
             "y": 26
           }
         },
@@ -5924,9 +6076,9 @@
               "name": "panel-15"
             },
             "height": 7,
-            "width": 6,
-            "x": 12,
-            "y": 26
+            "width": 8,
+            "x": 0,
+            "y": 33
           }
         },
         {
@@ -5937,9 +6089,9 @@
               "name": "panel-41"
             },
             "height": 7,
-            "width": 6,
-            "x": 18,
-            "y": 26
+            "width": 8,
+            "x": 8,
+            "y": 33
           }
         },
         {
@@ -5951,7 +6103,7 @@
             },
             "height": 7,
             "width": 8,
-            "x": 0,
+            "x": 16,
             "y": 33
           }
         },
@@ -5964,8 +6116,8 @@
             },
             "height": 7,
             "width": 8,
-            "x": 8,
-            "y": 33
+            "x": 0,
+            "y": 40
           }
         },
         {
@@ -5977,8 +6129,8 @@
             },
             "height": 7,
             "width": 8,
-            "x": 16,
-            "y": 33
+            "x": 8,
+            "y": 40
           }
         },
         {
@@ -5990,7 +6142,7 @@
             },
             "height": 7,
             "width": 8,
-            "x": 0,
+            "x": 16,
             "y": 40
           }
         },
@@ -6003,8 +6155,8 @@
             },
             "height": 7,
             "width": 8,
-            "x": 8,
-            "y": 40
+            "x": 0,
+            "y": 47
           }
         },
         {
@@ -6016,8 +6168,21 @@
             },
             "height": 7,
             "width": 8,
+            "x": 8,
+            "y": 47
+          }
+        },
+        {
+          "kind": "GridLayoutItem",
+          "spec": {
+            "element": {
+              "kind": "ElementReference",
+              "name": "panel-43"
+            },
+            "height": 7,
+            "width": 8,
             "x": 16,
-            "y": 40
+            "y": 47
           }
         },
         {
@@ -6030,7 +6195,7 @@
             "height": 6,
             "width": 4,
             "x": 0,
-            "y": 47
+            "y": 54
           }
         },
         {
@@ -6043,7 +6208,7 @@
             "height": 6,
             "width": 4,
             "x": 4,
-            "y": 47
+            "y": 54
           }
         },
         {
@@ -6056,7 +6221,7 @@
             "height": 6,
             "width": 4,
             "x": 8,
-            "y": 47
+            "y": 54
           }
         },
         {
@@ -6069,7 +6234,7 @@
             "height": 6,
             "width": 6,
             "x": 12,
-            "y": 47
+            "y": 54
           }
         },
         {
@@ -6082,7 +6247,7 @@
             "height": 6,
             "width": 6,
             "x": 18,
-            "y": 47
+            "y": 54
           }
         },
         {
@@ -6095,7 +6260,7 @@
             "height": 7,
             "width": 8,
             "x": 0,
-            "y": 53
+            "y": 60
           }
         },
         {
@@ -6108,7 +6273,7 @@
             "height": 7,
             "width": 8,
             "x": 8,
-            "y": 53
+            "y": 60
           }
         },
         {
@@ -6121,7 +6286,7 @@
             "height": 7,
             "width": 4,
             "x": 16,
-            "y": 53
+            "y": 60
           }
         },
         {
@@ -6134,19 +6299,6 @@
             "height": 7,
             "width": 4,
             "x": 20,
-            "y": 53
-          }
-        },
-        {
-          "kind": "GridLayoutItem",
-          "spec": {
-            "element": {
-              "kind": "ElementReference",
-              "name": "panel-43"
-            },
-            "height": 7,
-            "width": 8,
-            "x": 0,
             "y": 60
           }
         }
@@ -6190,6 +6342,6 @@
     "timezone": "browser",
     "to": "now"
   },
-  "title": "DGX Spark — Throughput Without Contention v7 Real GPU Fixed + NVIDIA Refined Theme",
+  "title": "NVIDIA DGX Spark — Throughput Without Contention v8 Output TPS Trend + NVIDIA Refined Theme",
   "variables": []
 }
